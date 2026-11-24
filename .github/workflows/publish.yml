@@ -1,0 +1,23 @@
+# Publishes to PyPI when a version tag (v*) is pushed, using PyPI trusted publishing (no token).
+# One-time setup on pypi.org -> Your account -> Publishing -> Add a pending publisher:
+#   PyPI project name: olostep-haystack | Owner: olostep-api | Repository: olostep-haystack
+#   Workflow: publish.yml | Environment: pypi
+name: publish
+
+on:
+  push:
+    tags: ["v*"]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install build && python -m build
+      - uses: pypa/gh-action-pypi-publish@release/v1

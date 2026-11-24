@@ -1,0 +1,26 @@
+name: test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - { python: "3.10", haystack: "haystack-ai==2.12.0" }
+          - { python: "3.12", haystack: "haystack-ai==2.12.0" }
+          - { python: "3.11", haystack: "haystack-ai" }
+          - { python: "3.13", haystack: "haystack-ai" }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: pip install -e . "${{ matrix.haystack }}" pytest ruff mypy
+      - run: ruff check src tests && ruff format --check src tests
+      - run: mypy src
+      - run: pytest -v

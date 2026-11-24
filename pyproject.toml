@@ -1,0 +1,56 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "olostep-haystack"
+version = "0.1.0"
+description = "Haystack integration for Olostep: live web search, scraping, crawling, answers and batch extraction for AI pipelines"
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.10"
+authors = [{ name = "Olostep", email = "info@olostep.com" }]
+keywords = ["haystack", "olostep", "web search", "web scraping", "crawling", "rag", "ai agents"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Internet :: WWW/HTTP :: Indexing/Search",
+]
+dependencies = [
+    "haystack-ai>=2.12.0",
+    "httpx>=0.27,<1",
+]
+
+[project.urls]
+Homepage = "https://www.olostep.com"
+Documentation = "https://docs.olostep.com"
+Repository = "https://github.com/olostep-api/olostep-haystack"
+Issues = "https://github.com/olostep-api/olostep-haystack/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/haystack_integrations"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W", "B", "UP"]
+# B008: `api_key: Secret = Secret.from_env_var(...)` is the standard Haystack component idiom.
+# UP007: keep `Union[...]` in output_types, which older Haystack 2.x releases handle best.
+ignore = ["B008", "UP007"]
+
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = true
